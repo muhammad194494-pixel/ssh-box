@@ -1,0 +1,9 @@
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+PubkeyAuthentication yes
+AllowUsers maell
+ClientAliveInterval 60
+ClientAliveCountMax 3
+HostKey /home/maell/.hostkeys/ssh_host_ed25519_key
+HostKey /home/maell/.hostkeys/ssh_host_rsa_key

@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+H=/home/maell
+cp -rn /etc/skel/. "$H"/ 2>/dev/null || true
+mkdir -p "$H/.hostkeys" "$H/.ssh"
+[ -f "$H/.hostkeys/ssh_host_ed25519_key" ] || ssh-keygen -q -t ed25519 -N "" -f "$H/.hostkeys/ssh_host_ed25519_key"
+[ -f "$H/.hostkeys/ssh_host_rsa_key" ] || ssh-keygen -q -t rsa -b 3072 -N "" -f "$H/.hostkeys/ssh_host_rsa_key"
+if [ -z "$SSH_PUBKEY" ]; then echo "ERROR: SSH_PUBKEY kosong" >&2; exit 1; fi
+echo "$SSH_PUBKEY" > "$H/.ssh/authorized_keys"
+chown -R maell:maell "$H" 2>/dev/null || true
+chown root:root "$H/.hostkeys" "$H"/.hostkeys/*
+chmod 755 "$H/.hostkeys"; chmod 600 "$H"/.hostkeys/ssh_host_*_key
+chmod 700 "$H/.ssh"; chmod 600 "$H/.ssh/authorized_keys"
+exec /usr/sbin/sshd -D -e
